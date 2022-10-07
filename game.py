@@ -5,6 +5,7 @@ from typing import NamedTuple
 class Player(NamedTuple):
     label: str
     color: str
+    hasMoved: bool
 
 
 class Move(NamedTuple):
@@ -15,8 +16,8 @@ class Move(NamedTuple):
 
 BOARD_SIZE = 3
 DEFAULT_PLAYERS = (
-    Player(label="X", color="blue"),
-    Player(label="O", color="red"),
+    Player(label="X", color="blue", hasMoved = False),
+    Player(label="O", color="red",  hasMoved = False),
 )
 
 
@@ -30,7 +31,6 @@ class Game:
         self._has_winner = False
         self._winning_combos = []
         self._setup_board()
-        self._playerHasMoved = False
 
     def _setup_board(self):
         self._current_moves = [
@@ -66,7 +66,7 @@ class Game:
         self._current_moves[row][col] = move
         
         
-        self._playerHasMoved = True 
+        self.current_player.hasMoved = True 
         
         # TODO: check whether the current move leads to a winning combo.
         # Do not return any values but set variables  self._has_winner 
@@ -86,7 +86,7 @@ class Game:
     def toggle_player(self):
         """Return a toggled player."""
         
-        if (self._playerHasMoved == True): 
+        if (self.current_player.hasMoved == True): 
            self.current_player = next(self._players + 1)
             
         return self.current_player
