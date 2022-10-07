@@ -1,9 +1,11 @@
 from itertools import cycle
 from typing import NamedTuple
 
+
 class Player(NamedTuple):
     label: str
     color: str
+    hasMoved: bool
 
 
 class Move(NamedTuple):
@@ -14,8 +16,8 @@ class Move(NamedTuple):
 
 BOARD_SIZE = 3
 DEFAULT_PLAYERS = (
-    Player(label="X", color="blue"),
-    Player(label="O", color="red"),
+    Player(label="X", color="blue", hasMoved = False),
+    Player(label="O", color="red",  hasMoved = False),
 )
 
 
@@ -64,6 +66,7 @@ class Game:
         row, col = move.row, move.col
         self._current_moves[row][col] = move
 
+
         X=[]
         O=[]
         for x in self._current_moves:
@@ -93,6 +96,7 @@ class Game:
         #print(self._get_winning_combos())
 
 
+
         # TODO: check whether the current move leads to a winning combo.
         # Do not return any values but set variables  self._has_winner 
         # and self.winner_combo in case of winning combo.
@@ -111,8 +115,12 @@ class Game:
 
     def toggle_player(self):
         """Return a toggled player."""
-        # TODO: switches self.current_player to the other player.
-        # Hint: https://docs.python.org/3/library/functions.html#next
+        
+        if (self.current_player.hasMoved == True): 
+           self.current_player = next(self._players + 1)
+            
+        return self.current_player
+        
        
     def reset_game(self):
         """Reset the game state to play again."""
