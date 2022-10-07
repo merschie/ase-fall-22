@@ -1,6 +1,7 @@
 from itertools import cycle
 from typing import NamedTuple
 
+
 class Player(NamedTuple):
     label: str
     color: str
@@ -29,6 +30,7 @@ class Game:
         self._has_winner = False
         self._winning_combos = []
         self._setup_board()
+        self._playerHasMoved = False
 
     def _setup_board(self):
         self._current_moves = [
@@ -62,6 +64,10 @@ class Game:
         """Process the current move and check if it's a win."""
         row, col = move.row, move.col
         self._current_moves[row][col] = move
+        
+        
+        self._playerHasMoved = True 
+        
         # TODO: check whether the current move leads to a winning combo.
         # Do not return any values but set variables  self._has_winner 
         # and self.winner_combo in case of winning combo.
@@ -79,8 +85,12 @@ class Game:
 
     def toggle_player(self):
         """Return a toggled player."""
-        # TODO: switches self.current_player to the other player.
-        # Hint: https://docs.python.org/3/library/functions.html#next
+        
+        if (self._playerHasMoved == True): 
+           self.current_player = next(self._players + 1)
+            
+        return self.current_player
+        
        
     def reset_game(self):
         """Reset the game state to play again."""
