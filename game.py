@@ -56,9 +56,11 @@ class Game:
         # and that there is no winner yet. Note that non-played cells
         # contain an empty string (i.e. ""). 
         # Use variables no_winner and move_not_played.
+
         no_winner = True
         move_not_played = True
         return True
+
 
     def process_move(self, move):
         """Process the current move and check if it's a win."""
@@ -109,6 +111,7 @@ class Game:
 
     def is_tied(self):
         """Return True if the game is tied, and False otherwise."""
+
         number_moves=0
         for x in self._current_moves:
             for y in x:
@@ -117,6 +120,7 @@ class Game:
         return (number_moves == 9) & (not self._has_winner)
         # TODO: check whether a tie was reached.
         # There is no winner and all moves have been tried.
+
 
     def toggle_player(self):
         """Return a toggled player."""
