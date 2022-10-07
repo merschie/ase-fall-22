@@ -74,6 +74,7 @@ class Game:
 
     def is_tied(self):
         """Return True if the game is tied, and False otherwise."""
+        return len(self._current_moves == 9) & (not self._has_winner)
         # TODO: check whether a tie was reached.
         # There is no winner and all moves have been tried.
 
