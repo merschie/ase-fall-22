@@ -5,7 +5,6 @@ from typing import NamedTuple
 class Player(NamedTuple):
     label: str
     color: str
-    hasMoved: bool
 
 
 class Move(NamedTuple):
@@ -16,8 +15,8 @@ class Move(NamedTuple):
 
 BOARD_SIZE = 3
 DEFAULT_PLAYERS = (
-    Player(label="X", color="blue", hasMoved = False),
-    Player(label="O", color="red",  hasMoved = False),
+    Player(label="X", color="blue"),
+    Player(label="O", color="red"),
 )
 
 
@@ -58,14 +57,10 @@ class Game:
         # contain an empty string (i.e. ""). 
         # Use variables no_winner and move_not_played.
 
-        if(self._current_moves[row][col].label != ""):
-            move_not_played = False
-        else:
-            move_not_played = True
-        
-        no_winner = self.has_winner
+        no_winner = True
+        move_not_played = True
+        return True
 
-        return no_winner and move_not_played
 
     def process_move(self, move):
         """Process the current move and check if it's a win."""
@@ -75,6 +70,7 @@ class Game:
 
         X=[]
         O=[]
+        print(self._current_moves)
         for x in self._current_moves:
             for y in x:
                 if y.label=='X':
@@ -115,19 +111,23 @@ class Game:
 
     def is_tied(self):
         """Return True if the game is tied, and False otherwise."""
-        for row in self._current_moves:
-            for move in row:
-                if move.label == '':
-                    return False
-        return (not self._has_winner)
+
+        number_moves=0
+        for x in self._current_moves:
+            for y in x:
+                if y.label!='':
+                    number_moves=number_moves+1
+        return (number_moves == 9) & (not self._has_winner)
+        # TODO: check whether a tie was reached.
+        # There is no winner and all moves have been tried.
+
 
     def toggle_player(self):
         """Return a toggled player."""
-        
-        if (self.current_player.hasMoved == True): 
-           self.current_player = next(self._players + 1)
-            
+        #print(self.current_player)
+        self.current_player = next(self._players)
         return self.current_player
+
         
        
     def reset_game(self):
