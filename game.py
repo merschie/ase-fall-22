@@ -1,9 +1,11 @@
 from itertools import cycle
 from typing import NamedTuple
 
+
 class Player(NamedTuple):
     label: str
     color: str
+    hasMoved: bool
 
 
 class Move(NamedTuple):
@@ -14,8 +16,8 @@ class Move(NamedTuple):
 
 BOARD_SIZE = 3
 DEFAULT_PLAYERS = (
-    Player(label="X", color="blue"),
-    Player(label="O", color="red"),
+    Player(label="X", color="blue", hasMoved = False),
+    Player(label="O", color="red",  hasMoved = False),
 )
 
 
@@ -69,6 +71,38 @@ class Game:
         """Process the current move and check if it's a win."""
         row, col = move.row, move.col
         self._current_moves[row][col] = move
+
+
+        X=[]
+        O=[]
+        for x in self._current_moves:
+            for y in x:
+                if y.label=='X':
+                    X.append((y.row,y.col))
+                if y.label=='O':
+                    O.append((y.row,y.col))
+
+        for x in self._get_winning_combos():
+            if set(x) <= set(X):
+                self._has_winner=True
+
+                self.winner_combo=x
+                #print("WinnerCombo")
+                #print(self.winner_combo)
+                return
+            if set(x) <= set(O):
+                self._has_winner=True
+                self.winner_combo=x
+                # print("WinnerCombo")
+                # print(self.winner_combo)
+                return
+
+
+        #print(self._current_moves)
+        #print(self._get_winning_combos())
+
+
+
         # TODO: check whether the current move leads to a winning combo.
         # Do not return any values but set variables  self._has_winner 
         # and self.winner_combo in case of winning combo.
@@ -81,13 +115,20 @@ class Game:
 
     def is_tied(self):
         """Return True if the game is tied, and False otherwise."""
-        # TODO: check whether a tie was reached.
-        # There is no winner and all moves have been tried.
+        for row in self._current_moves:
+            for move in row:
+                if move.label == '':
+                    return False
+        return (not self._has_winner)
 
     def toggle_player(self):
         """Return a toggled player."""
-        # TODO: switches self.current_player to the other player.
-        # Hint: https://docs.python.org/3/library/functions.html#next
+        
+        if (self.current_player.hasMoved == True): 
+           self.current_player = next(self._players + 1)
+            
+        return self.current_player
+        
        
     def reset_game(self):
         """Reset the game state to play again."""
