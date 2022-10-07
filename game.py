@@ -55,13 +55,44 @@ class Game:
         # and that there is no winner yet. Note that non-played cells
         # contain an empty string (i.e. ""). 
         # Use variables no_winner and move_not_played.
-        
+        no_winner = "foo"
+        move_not_played = "bar"
         return no_winner and move_not_played
 
     def process_move(self, move):
         """Process the current move and check if it's a win."""
         row, col = move.row, move.col
         self._current_moves[row][col] = move
+
+        X=[]
+        O=[]
+        for x in self._current_moves:
+            for y in x:
+                if y.label=='X':
+                    X.append((y.row,y.col))
+                if y.label=='O':
+                    O.append((y.row,y.col))
+
+        for x in self._get_winning_combos():
+            if set(x) <= set(X):
+                self._has_winner=True
+
+                self.winner_combo=x
+                #print("WinnerCombo")
+                #print(self.winner_combo)
+                return
+            if set(x) <= set(O):
+                self._has_winner=True
+                self.winner_combo=x
+                # print("WinnerCombo")
+                # print(self.winner_combo)
+                return
+
+
+        #print(self._current_moves)
+        #print(self._get_winning_combos())
+
+
         # TODO: check whether the current move leads to a winning combo.
         # Do not return any values but set variables  self._has_winner 
         # and self.winner_combo in case of winning combo.
