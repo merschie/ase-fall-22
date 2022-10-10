@@ -52,14 +52,22 @@ class Game:
     def is_valid_move(self, move):
         """Return True if move is valid, and False otherwise."""
         row, col = move.row, move.col
+        
+        if self._has_winner or self.is_tied():
+            return False
+
+        #checks if move has already been made
+        for x in self._current_moves:
+            for y in x:
+                if row == y.row and col == y.col and y.label != '':
+                    return False
+        
+        return True
         # TODO: check that the current move has not been played already 
         # and that there is no winner yet. Note that non-played cells
         # contain an empty string (i.e. ""). 
         # Use variables no_winner and move_not_played.
 
-        no_winner = True
-        move_not_played = True
-        return True
 
 
     def process_move(self, move):
@@ -67,37 +75,25 @@ class Game:
         row, col = move.row, move.col
         self._current_moves[row][col] = move
 
-
-        X=[]
-        O=[]
-        print(self._current_moves)
+        X = []
+        O = []
         for x in self._current_moves:
             for y in x:
-                if y.label=='X':
-                    X.append((y.row,y.col))
-                if y.label=='O':
-                    O.append((y.row,y.col))
+                if y.label == 'X':
+                    X.append( (y.row,y.col) )
+                elif y.label == 'O':
+                    O.append( (y.row, y.col) )
 
         for x in self._get_winning_combos():
             if set(x) <= set(X):
                 self._has_winner=True
-
                 self.winner_combo=x
-                #print("WinnerCombo")
-                #print(self.winner_combo)
                 return
+
             if set(x) <= set(O):
                 self._has_winner=True
                 self.winner_combo=x
-                # print("WinnerCombo")
-                # print(self.winner_combo)
                 return
-
-
-        #print(self._current_moves)
-        #print(self._get_winning_combos())
-
-
 
         # TODO: check whether the current move leads to a winning combo.
         # Do not return any values but set variables  self._has_winner 
@@ -111,20 +107,17 @@ class Game:
 
     def is_tied(self):
         """Return True if the game is tied, and False otherwise."""
-
-        number_moves=0
         for x in self._current_moves:
             for y in x:
-                if y.label!='':
-                    number_moves=number_moves+1
-        return (number_moves == 9) & (not self._has_winner)
+                if y.label =='':
+                    return False
+        return not self._has_winner
         # TODO: check whether a tie was reached.
         # There is no winner and all moves have been tried.
 
 
     def toggle_player(self):
         """Return a toggled player."""
-        #print(self.current_player)
         self.current_player = next(self._players)
         return self.current_player
 
